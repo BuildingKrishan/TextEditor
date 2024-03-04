@@ -7,7 +7,7 @@
 				<ControlTemplate TargetType="{x:Type search:SearchPanel}">
 					<Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" BorderThickness="1" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Arrow">
 						<StackPanel Orientation="Horizontal">
-							<TextBox Name="PART_searchTextBox" Focusable="True" Width="150" Height="24" Margin="3,3,3,0">
+							<TextBox Name="PART_searchTextBox" Focusable="True" Width="280" Height="24" Margin="3,3,3,0">
 								<TextBox.Text>
 									<Binding Path="SearchPattern" RelativeSource="{RelativeSource TemplatedParent}" UpdateSourceTrigger="PropertyChanged">
 										<Binding.ValidationRules>
@@ -29,11 +29,11 @@
 									</Popup>
 								</search:DropDownButton.DropDownContent>
 							</search:DropDownButton>
-							<Button Margin="3" Height="24" Width="24" Command="search:SearchCommands.FindPrevious" ToolTip="{Binding Localization.FindPreviousText, RelativeSource={RelativeSource TemplatedParent}}">
-								<Image Width="16" Height="16" Stretch="Fill" Source="prev.png" />
+							<Button Margin="3" Height="24" Command="search:SearchCommands.FindPrevious" ToolTip="{Binding Localization.FindPreviousText, RelativeSource={RelativeSource TemplatedParent}}">
+								Prev<!--<Image Width="16" Height="16" Stretch="Fill" Source="prev.png" />-->
 							</Button>
-							<Button Margin="3" Height="24" Width="24" Command="search:SearchCommands.FindNext" ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}}">
-								<Image Width="16" Height="16" Stretch="Fill" Source="next.png" />
+							<Button Margin="3" Height="24" Command="search:SearchCommands.FindNext" ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}}">
+								Next<!--<Image Width="16" Height="16" Stretch="Fill" Source="next.png" />-->
 							</Button>
 							<Button Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Top" Command="search:SearchCommands.CloseSearchPanel"
 							        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Focusable="False">

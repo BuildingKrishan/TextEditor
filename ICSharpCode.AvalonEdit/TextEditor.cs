@@ -32,7 +32,7 @@ using System.Windows.Shapes;
 
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
-using ICSharpCode.AvalonEdit.Highlighting;
+//using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
 
@@ -300,7 +300,7 @@ namespace ICSharpCode.AvalonEdit
 			command.Execute(null, textArea);
 		}
 		#endregion
-
+/*
 		#region Syntax highlighting
 		/// <summary>
 		/// The <see cref="SyntaxHighlighting"/> property.
@@ -349,7 +349,7 @@ namespace ICSharpCode.AvalonEdit
 				throw new ArgumentNullException("highlightingDefinition");
 			return new HighlightingColorizer(highlightingDefinition);
 		}
-		#endregion
+		#endregion*/
 
 		#region WordWrap
 		/// <summary>

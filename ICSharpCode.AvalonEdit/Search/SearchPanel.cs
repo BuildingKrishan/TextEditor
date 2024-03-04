@@ -29,6 +29,9 @@ using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Rendering;
 
+using AIFabricTest;
+using System.Threading.Tasks;
+
 namespace ICSharpCode.AvalonEdit.Search
 {
 	/// <summary>
@@ -44,6 +47,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		Popup dropdownPopup;
 		SearchPanelAdorner adorner;
 
+		SemanticSearch semanticSearch = new SemanticSearch();
 		#region DependencyProperties
 		/// <summary>
 		/// Dependency property for <see cref="UseRegex"/>.
@@ -252,6 +256,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// </summary>
 		public void RegisterCommands(CommandBindingCollection commandBindings)
 		{
+
 			handler.RegisterGlobalCommands(commandBindings);
 		}
 
@@ -269,6 +274,7 @@ namespace ICSharpCode.AvalonEdit.Search
 
 		void AttachInternal(TextArea textArea)
 		{
+
 			this.textArea = textArea;
 			adorner = new SearchPanelAdorner(textArea, this);
 			DataContext = this;
@@ -284,10 +290,13 @@ namespace ICSharpCode.AvalonEdit.Search
 			this.CommandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, (sender, e) => FindPrevious()));
 			this.CommandBindings.Add(new CommandBinding(SearchCommands.CloseSearchPanel, (sender, e) => Close()));
 			IsClosed = true;
+			semanticSearch.SetDocText(currentDocument.Text);
+
 		}
 
 		void textArea_DocumentChanged(object sender, EventArgs e)
 		{
+
 			if (currentDocument != null)
 				currentDocument.TextChanged -= textArea_Document_TextChanged;
 			currentDocument = textArea.Document;
@@ -295,10 +304,13 @@ namespace ICSharpCode.AvalonEdit.Search
 				currentDocument.TextChanged += textArea_Document_TextChanged;
 				DoSearch(false);
 			}
+			semanticSearch.SetDocText(currentDocument.Text);
+
 		}
 
 		void textArea_Document_TextChanged(object sender, EventArgs e)
 		{
+			semanticSearch.SetDocText(currentDocument.Text);
 			DoSearch(false);
 		}
 
@@ -344,8 +356,13 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Moves to the next occurrence in the file.
 		/// </summary>
-		public void FindNext()
+		public async void FindNext()
 		{
+			semanticSearch.SetDocText(currentDocument.Text);
+			semanticSearch.CreateRanking(searchTextBox.Text);
+			int startOffset = semanticSearch.GetStartIndex();
+			int endOffset = semanticSearch.GetEndIndex();
+			SelectResultSemanticSearch(startOffset, endOffset);
 			SearchResult result = renderer.CurrentResults.FindFirstSegmentWithStartAfter(textArea.Caret.Offset + 1);
 			if (result == null)
 				result = renderer.CurrentResults.FirstSegment;
@@ -404,6 +421,18 @@ namespace ICSharpCode.AvalonEdit.Search
 		{
 			textArea.Caret.Offset = result.StartOffset;
 			textArea.Selection = Selection.Create(textArea, result.StartOffset, result.EndOffset);
+			textArea.Caret.BringCaretToView();
+			// show caret even if the editor does not have the Keyboard Focus
+			textArea.Caret.Show();
+		}
+
+		void SelectResultSemanticSearch(int startOffset, int endOffset)
+		{
+			textArea.Caret.Offset = startOffset;
+			if (endOffset >= textArea.Document.TextLength) {
+				endOffset = textArea.Document.TextLength - 1;
+			}
+			textArea.Selection = Selection.Create(textArea, startOffset + 1, endOffset + 1);
 			textArea.Caret.BringCaretToView();
 			// show caret even if the editor does not have the Keyboard Focus
 			textArea.Caret.Show();
